@@ -24,7 +24,7 @@ public record ResponseDto<T>
     {
         return new ResponseDto<T>
         {
-            Errors = new List<string>(),
+            Errors = Errors,
             Status = status
         };
     }
