@@ -1,6 +1,7 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using ElasticSearch.API.Models;
 using Nest;
+using System.Collections.Immutable;
 
 namespace ElasticSearch.API.Repositories;
 
@@ -18,7 +19,7 @@ public class ProductRepository
     {
         newProduct.Created = DateTime.Now;
 
-        var response = await _client.IndexAsync(newProduct, x => x.Index(indexName));
+        var response = await _client.IndexAsync(newProduct, x => x.Index(indexName).Id(Guid.NewGuid().ToString()));
 
         if (!response.IsSuccess()) return null;
 
@@ -26,5 +27,28 @@ public class ProductRepository
 
         return newProduct;
 
+    }
+
+    public async Task<ImmutableList<Product>> GetAllAsync()
+    {
+        var result = await _client.SearchAsync<Product>(s => s.Index(indexName).Query(q => q.MatchAll()));
+
+        foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
+
+        return result.Documents.ToImmutableList();
+    }
+
+    public async Task<Product?> GetByIdAsync(string id)
+    {
+        var response = await _client.GetAsync<Product>(id, x => x.Index(indexName));
+
+        if (!response.IsValidResponse)
+        {
+            return null;
+        }
+
+        response.Source.Id = response.Id;
+
+        return response.Source;
     }
 }

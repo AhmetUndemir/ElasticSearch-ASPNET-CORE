@@ -21,6 +21,6 @@ public class Product
             return new ProductDto(Id, Name, Price, Stock, Created, null, null);
         }
 
-        return new ProductDto(Id, Name, Price, Stock, Created, null, new ProductFeatureDto(Feature.Width, Feature.Heigth, Feature.Color));
+        return new ProductDto(Id, Name, Price, Stock, Created, null, new ProductFeatureDto(Feature.Width, Feature.Heigth, Feature.Color.ToString()));
     }
 }

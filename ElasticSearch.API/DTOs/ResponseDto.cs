@@ -20,6 +20,15 @@ public record ResponseDto<T>
         };
     }
 
+    public static ResponseDto<T> Fail(string error, HttpStatusCode status)
+    {
+        return new ResponseDto<T>
+        {
+            Errors = new List<string> { error },
+            Status = status
+        };
+    }
+
     public static ResponseDto<T> Fail(List<string> Errors, HttpStatusCode status)
     {
         return new ResponseDto<T>
@@ -28,5 +37,4 @@ public record ResponseDto<T>
             Status = status
         };
     }
-        
 }
