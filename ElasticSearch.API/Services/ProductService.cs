@@ -1,4 +1,5 @@
-﻿using ElasticSearch.API.DTOs;
+﻿using Elastic.Clients.Elasticsearch;
+using ElasticSearch.API.DTOs;
 using ElasticSearch.API.Models;
 using ElasticSearch.API.Repositories;
 using System.Collections.Immutable;
@@ -9,10 +10,12 @@ namespace ElasticSearch.API.Services;
 public class ProductService
 {
     private readonly ProductRepository _productRepository;
+    private readonly ILogger<ProductService> _logger;
 
-    public ProductService(ProductRepository productRepository)
+    public ProductService(ProductRepository productRepository, ILogger<ProductService> logger)
     {
         _productRepository = productRepository;
+        _logger = logger;
     }
 
     public async Task<ResponseDto<ProductDto>> SaveAsync(ProductCreateDto request)
@@ -41,5 +44,35 @@ public class ProductService
         if (hasProduct is null) return ResponseDto<ProductDto>.Fail("Kayıt bulunamadı.", HttpStatusCode.NotFound);
 
         return ResponseDto<ProductDto>.Success(hasProduct.CreateDto(), HttpStatusCode.OK);
+    }
+
+    public async Task<ResponseDto<bool>> UpdateAsync(ProductUpdateDto request)
+    {
+        var isSuccess = await _productRepository.UpdateAsync(request);
+
+        if (!isSuccess)
+        {
+            return ResponseDto<bool>.Fail("Güncelleme esanasında bir hata meydana geldi.", HttpStatusCode.InternalServerError);
+        }
+
+        return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);
+    }
+
+    public async Task<ResponseDto<bool>> DeleteAsync(string id)
+    {
+        var deleteResponse = await _productRepository.DeleteAsync(id);
+
+        if (!deleteResponse.IsValidResponse && deleteResponse.Result == Result.NotFound)
+        {
+            return ResponseDto<bool>.Fail("Silmeye çalıştığınız ürün bulunamamıştır.", HttpStatusCode.NotFound);
+        }
+
+        if (!deleteResponse.IsValidResponse)
+        {
+            _logger.LogError($"Elasticsearch silme işlemi esnasında bir hata meydana geldi. Hata: {deleteResponse.DebugInformation}");
+            return ResponseDto<bool>.Fail("Silme esnasında bir hata meydana geldi.", HttpStatusCode.InternalServerError);
+        }
+
+        return ResponseDto<bool>.Success(true, HttpStatusCode.NoContent);
     }
 }

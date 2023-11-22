@@ -1,6 +1,6 @@
 ﻿using Elastic.Clients.Elasticsearch;
+using ElasticSearch.API.DTOs;
 using ElasticSearch.API.Models;
-using Nest;
 using System.Collections.Immutable;
 
 namespace ElasticSearch.API.Repositories;
@@ -8,7 +8,7 @@ namespace ElasticSearch.API.Repositories;
 public class ProductRepository
 {
     private readonly ElasticsearchClient _client;
-    private const string indexName = "products11";
+    private const string indexName = "products11ss";
 
     public ProductRepository(ElasticsearchClient client)
     {
@@ -50,5 +50,19 @@ public class ProductRepository
         response.Source.Id = response.Id;
 
         return response.Source;
+    }
+
+    public async Task<bool> UpdateAsync(ProductUpdateDto updateProduct)
+    {
+        var response = await _client.UpdateAsync<Product, ProductUpdateDto>(indexName, updateProduct.Id, x => x.Doc(updateProduct));
+
+        return response.IsValidResponse;
+    }
+
+    public async Task<DeleteResponse> DeleteAsync(string id)
+    {
+        var response = await _client.DeleteAsync<Product>(id, x => x.Index(indexName));
+
+        return response;
     }
 }
