@@ -1,6 +1,8 @@
 using Elasticsearch.Net;
 using Nest;
 using ElasticSearch.API.Extensions;
+using ElasticSearch.API.Services;
+using ElasticSearch.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddElasticClient(builder.Configuration);
+builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<ProductRepository>();
+
 
 var app = builder.Build();
-
-var pool = new SingleNodeConnectionPool(new Uri(builder.Configuration.GetSection("Elastic")["Url"]!));
-var settings = new ConnectionSettings(pool);
-var client = new ElasticClient(settings);
-builder.Services.AddSingleton(client);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,28 +1,30 @@
-﻿using ElasticSearch.API.Models;
+﻿using Elastic.Clients.Elasticsearch;
+using ElasticSearch.API.Models;
 using Nest;
 
 namespace ElasticSearch.API.Repositories;
 
 public class ProductRepository
 {
-    private readonly IElasticClient _elasticClient;
+    private readonly ElasticsearchClient _client;
+    private const string indexName = "products11";
 
-    public ProductRepository(IElasticClient elasticClient)
+    public ProductRepository(ElasticsearchClient client)
     {
-        _elasticClient = elasticClient;
+        _client = client;
     }
 
-    public async Task<Product?> SaveAsync(Product product)
+    public async Task<Product?> SaveAsync(Product newProduct)
     {
-        product.Created = DateTime.Now;
+        newProduct.Created = DateTime.Now;
 
-        var response = await _elasticClient.IndexAsync(product, x => x.Index("products"));
+        var response = await _client.IndexAsync(newProduct, x => x.Index(indexName));
 
-        if (!response.IsValid) return null;
+        if (!response.IsSuccess()) return null;
 
-        product.Id = response.Id;
-        return product;
+        newProduct.Id = response.Id;
+
+        return newProduct;
 
     }
-
 }
