@@ -62,12 +62,12 @@ public class ProductService
     {
         var deleteResponse = await _productRepository.DeleteAsync(id);
 
-        if (!deleteResponse.IsSuccess() && deleteResponse.Result == Result.NotFound)
+        if (!deleteResponse.IsValidResponse && deleteResponse.Result == Result.NotFound)
         {
             return ResponseDto<bool>.Fail("Silmeye çalıştığınız ürün bulunamamıştır.", HttpStatusCode.NotFound);
         }
 
-        if (!deleteResponse.IsSuccess())
+        if (!deleteResponse.IsValidResponse)
         {
             deleteResponse.TryGetOriginalException(out Exception? exception);
             _logger.LogError(exception, deleteResponse.ElasticsearchServerError.Error.ToString());

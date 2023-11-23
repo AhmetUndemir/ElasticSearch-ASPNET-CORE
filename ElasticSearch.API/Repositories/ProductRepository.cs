@@ -21,7 +21,7 @@ public class ProductRepository
 
         var response = await _client.IndexAsync(newProduct, x => x.Index(indexName).Id(Guid.NewGuid().ToString()));
 
-        if (!response.IsSuccess()) return null;
+        if (!response.IsValidResponse) return null;
 
         newProduct.Id = response.Id;
 
@@ -42,7 +42,7 @@ public class ProductRepository
     {
         var response = await _client.GetAsync<Product>(id, x => x.Index(indexName));
 
-        if (!response.IsSuccess())
+        if (!response.IsValidResponse)
         {
             return null;
         }
@@ -56,7 +56,7 @@ public class ProductRepository
     {
         var response = await _client.UpdateAsync<Product, ProductUpdateDto>(indexName, updateProduct.Id, x => x.Doc(updateProduct));
 
-        return response.IsSuccess();
+        return response.IsValidResponse;
     }
 
     public async Task<DeleteResponse> DeleteAsync(string id)
