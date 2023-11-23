@@ -8,7 +8,7 @@ namespace ElasticSearch.API.Repositories;
 public class ProductRepository
 {
     private readonly ElasticsearchClient _client;
-    private const string indexName = "products11ss";
+    private const string indexName = "products11";
 
     public ProductRepository(ElasticsearchClient client)
     {
@@ -42,7 +42,7 @@ public class ProductRepository
     {
         var response = await _client.GetAsync<Product>(id, x => x.Index(indexName));
 
-        if (!response.IsValidResponse)
+        if (!response.IsSuccess())
         {
             return null;
         }
@@ -56,7 +56,7 @@ public class ProductRepository
     {
         var response = await _client.UpdateAsync<Product, ProductUpdateDto>(indexName, updateProduct.Id, x => x.Doc(updateProduct));
 
-        return response.IsValidResponse;
+        return response.IsSuccess();
     }
 
     public async Task<DeleteResponse> DeleteAsync(string id)

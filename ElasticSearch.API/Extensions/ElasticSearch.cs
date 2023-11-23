@@ -1,7 +1,5 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
-using Elasticsearch.Net;
-using Nest;
 
 namespace ElasticSearch.API.Extensions
 {
