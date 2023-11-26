@@ -1,2 +1,8 @@
 language: csharp
-solution: ElasticSearch.sln
+mono: none
+dotnet: 7.0
+
+script:
+  - dotnet restore
+  - dotnet build
+  - dotnet test MyProject.Tests/MyProject.Tests.csproj
