@@ -1,5 +1,2 @@
 language: csharp
 solution: ElasticSearch.sln
-install:
-  - nuget restore ElasticSearch.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
