@@ -50,5 +50,13 @@ namespace ElasticSearch.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> RangeQuery(double fromPrice, double toPrice)
+        {
+            var result = await _eCommerceRepository.RangeQueryAsync(fromPrice, toPrice);
+
+            return Ok(result);
+        }
     }
 }
