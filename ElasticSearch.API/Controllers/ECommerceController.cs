@@ -1,6 +1,8 @@
-﻿using ElasticSearch.API.Repositories;
+﻿using ElasticSearch.API.Models.ECommerceModel;
+using ElasticSearch.API.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Immutable;
 
 namespace ElasticSearch.API.Controllers
 {
@@ -37,6 +39,14 @@ namespace ElasticSearch.API.Controllers
             }
 
             var result = await _eCommerceRepository.TermsQuery(customerFirstNames);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PrefixQuery(string customerFullName)
+        {
+            var result = await _eCommerceRepository.PrefixQueryAsync(customerFullName);
 
             return Ok(result);
         }
