@@ -58,5 +58,13 @@ namespace ElasticSearch.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> MatchAll()
+        {
+            var result = await _eCommerceRepository.MatchAllQueryAsync();
+
+            return Ok(result);
+        }
     }
 }
