@@ -66,5 +66,13 @@ namespace ElasticSearch.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> PaginationQuery(int page, int pageSize)
+        {
+            var result = await _eCommerceRepository.PaginationQueryAsync(page, pageSize);
+
+            return Ok(result);
+        }
     }
 }
