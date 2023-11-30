@@ -130,5 +130,13 @@ namespace ElasticSearch.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> MathMultiMatchFullText(string name)
+        {
+            var result = await _eCommerceRepository.MultiMatchFullTextAsync(name);
+
+            return Ok(result);
+        }
     }
 }

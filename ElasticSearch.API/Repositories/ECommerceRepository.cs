@@ -176,6 +176,30 @@ namespace ElasticSearch.API.Repositories
             return result.Documents.ToImmutableList();
         }
 
+        public async Task<ImmutableList<ECommerce>> MultiMatchFullTextAsync(string name)
+        {
+
+            var customer_first_name = new Field("customer_first_name");
+            var customer_last_name = new Field("customer_last_name");
+            var customer_full_name = new Field("customer_full_name");
+
+
+            var result = await _client.SearchAsync<ECommerce>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .MultiMatch(mm => mm
+            .Fields(customer_first_name
+            .And(customer_last_name)
+            .And(customer_full_name))
+            .Query(name))));
+
+            foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
+
+            return result.Documents.ToImmutableList();
+        }
+
+
         public async Task<ImmutableList<ECommerce>> MathBoolFrefixFullTextAsync(string customerFullName)
         {
             var result = await _client.SearchAsync<ECommerce>(s => s
