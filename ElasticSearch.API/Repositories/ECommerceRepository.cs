@@ -174,7 +174,65 @@ namespace ElasticSearch.API.Repositories
             foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
 
             return result.Documents.ToImmutableList();
+        }
 
+        public async Task<ImmutableList<ECommerce>> MathBoolFrefixFullTextAsync(string customerFullName)
+        {
+            var result = await _client.SearchAsync<ECommerce>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .MatchBoolPrefix(m => m
+            .Field(f => f.CustomerFullName).Query(customerFullName))));
+
+            foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
+
+            return result.Documents.ToImmutableList();
+        }
+
+        public async Task<ImmutableList<ECommerce>> MathPhraseFullTextAsync(string customerFullName)
+        {
+            var result = await _client.SearchAsync<ECommerce>(s => s
+                       .Index(indexName)
+                       .Size(1000)
+                       .Query(q => q
+                       .MatchPhrase(m => m
+                       .Field(f => f.CustomerFullName).Query(customerFullName))));
+
+            foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
+
+            return result.Documents.ToImmutableList();
+        }
+
+        public async Task<ImmutableList<ECommerce>> MathPhrasePrefixFullTextAsync(string cityName, double taxtFullTotalPrice, string categoryName, string menufacturer)
+        {
+            var result = await _client.SearchAsync<ECommerce>(s => s
+                                  .Index(indexName)
+                                  .Size(1000)
+                                  .Query(q => q
+                                  .Bool(b => b
+                                  .Must(m => m
+                                  .Term(t => t
+                                  .Field("geoip.city_name")
+                                  .Value(cityName)))
+                                  .MustNot(mn => mn
+                                  .Range(r => r
+                                  .NumberRange(nr => nr
+                                  .Field(f => f.TaxfulTotalPrice)
+                                  .Lte(taxtFullTotalPrice))))
+                                  .Should(s => s
+                                  .Term(t => t
+                                  .Field(f => f.Category
+                                  .Suffix("keyword"))
+                                  .Value(categoryName)))
+                                  .Filter(f => f
+                                  .Term(t => t
+                                  .Field("manufacturer.keyword")
+                                  .Value(menufacturer))))));
+
+            foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
+
+            return result.Documents.ToImmutableList();
         }
 
     }

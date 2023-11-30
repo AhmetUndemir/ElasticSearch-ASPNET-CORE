@@ -98,5 +98,29 @@ namespace ElasticSearch.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> MathBoolFrefixFullText(string customerFullName)
+        {
+            var result = await _eCommerceRepository.MathBoolFrefixFullTextAsync(customerFullName);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> MathPhraseFullText(string customerFullName)
+        {
+            var result = await _eCommerceRepository.MathPhraseFullTextAsync(customerFullName);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> MathPhrasePrefixFullText(string cityName, double taxtFullTotalPrice, string categoryName, string menufacturer)
+        {
+            var result = await _eCommerceRepository.MathPhrasePrefixFullTextAsync(cityName, taxtFullTotalPrice, categoryName, menufacturer);
+
+            return Ok(result);
+        }
     }
 }
