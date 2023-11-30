@@ -162,5 +162,20 @@ namespace ElasticSearch.API.Repositories
             return result.Documents.ToImmutableList();
         }
 
+        public async Task<ImmutableList<ECommerce>> MathQueryFullTextAsync(string categoryName)
+        {
+            var result = await _client.SearchAsync<ECommerce>(s => s
+            .Index(indexName)
+            .Size(1000)
+            .Query(q => q
+            .Match(m => m
+            .Field(f => f.Category).Query(categoryName).Operator(Operator.And))));
+
+            foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
+
+            return result.Documents.ToImmutableList();
+
+        }
+
     }
 }

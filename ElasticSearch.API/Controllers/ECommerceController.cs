@@ -90,5 +90,13 @@ namespace ElasticSearch.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> MathQueryFullText(string categoryName)
+        {
+            var result = await _eCommerceRepository.MathQueryFullTextAsync(categoryName);
+
+            return Ok(result);
+        }
     }
 }
