@@ -122,5 +122,13 @@ namespace ElasticSearch.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> MathPhrasePrefixFullText2(string customerFullName)
+        {
+            var result = await _eCommerceRepository.MathPhrasePrefixFullText2Async(customerFullName);
+
+            return Ok(result);
+        }
     }
 }
