@@ -1,7 +1,12 @@
+using ElasticSearch.WebUI.Extensions;
+using ElasticSearch.WebUI.Mapper;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddElasticClient(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
