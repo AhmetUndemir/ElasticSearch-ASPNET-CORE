@@ -1,5 +1,7 @@
 using ElasticSearch.WebUI.Extensions;
 using ElasticSearch.WebUI.Mapper;
+using ElasticSearch.WebUI.Repositories;
+using ElasticSearch.WebUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddElasticClient(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddScoped<BlogRepository>();
+builder.Services.AddScoped<BlogService>();
 
 var app = builder.Build();
 

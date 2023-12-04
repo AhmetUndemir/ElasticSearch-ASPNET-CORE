@@ -18,8 +18,13 @@ namespace ElasticSearch.WebUI.Services
 
         public async Task<bool> SaveAsync(BlogCreateViewModel model)
         {
-            var blog = _mapper.Map<Blog>(model);
-            blog.UserId = Guid.NewGuid();
+            var blog = new Blog
+            {
+                Title = model.Title,
+                Content = model.Content,
+                Tags = model.Tags.Split(","),
+                UserId = Guid.NewGuid()
+            };
 
             var result = await _blogRepository.SaveAsync(blog);
 
