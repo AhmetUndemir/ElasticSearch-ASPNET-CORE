@@ -38,6 +38,8 @@ namespace ElasticSearch.WebUI.Repositories
 
             Action<QueryDescriptor<Blog>> titleMatchBoolPrefix = (q) => q.MatchBoolPrefix(m => m.Field(f => f.Title).Query(searchText));
 
+            Action<QueryDescriptor<Blog>> tagTerm = (q) => q.Term(t => t.Field(f => f.Tags).Value(searchText));
+
 
             if (string.IsNullOrEmpty(searchText))
             {
@@ -47,6 +49,7 @@ namespace ElasticSearch.WebUI.Repositories
             {
                 ListQuery.Add(matchContent);
                 ListQuery.Add(titleMatchBoolPrefix);
+                ListQuery.Add(tagTerm);
             }
 
 

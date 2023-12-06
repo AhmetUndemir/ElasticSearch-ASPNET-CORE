@@ -10,7 +10,7 @@ namespace ElasticSearch.WebUI.Services
         private readonly BlogRepository _blogRepository;
         private readonly IMapper _mapper;
 
-        public BlogService(BlogRepository blogRepository,IMapper mapper)
+        public BlogService(BlogRepository blogRepository, IMapper mapper)
         {
             _blogRepository = blogRepository;
             _mapper = mapper;
@@ -31,9 +31,20 @@ namespace ElasticSearch.WebUI.Services
             return result != null;
         }
 
-        public async Task<List<Blog>> SearchAsync(string searchText)
+        public async Task<List<BlogViewModel>> SearchAsync(string searchText)
         {
-            return await _blogRepository.SearchAsync(searchText);
+            var blogList = await _blogRepository.SearchAsync(searchText);
+
+            return blogList.Select(x => new BlogViewModel
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Content = x.Content,
+                Tags = string.Join(",", x.Tags),
+                UserId = x.UserId.ToString(),
+                CreatedDate = x.CreatedDate.ToString("dd.MM.yyyy")
+            }).ToList();
+
         }
     }
 }
