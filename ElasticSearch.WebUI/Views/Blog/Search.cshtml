@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Search";
+}
+@model List<Blog>
+
+<div class="container">
+    <div class="col-md-10 offset-md-1">
+        <form asp-action="Search" asp-controller="Blog">
+            <div class="mb-3">
+                <label>Search</label>
+                <input type="text" class="form-control" name="searchText" placeholder="Search" value="@ViewBag.SearchText">
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning">
+                Sonuç bulunamamıştır
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th>UserId</th>
+                        <th>Tags</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var blog in Model)
+                    {
+                        <tr>
+                            <td>@blog.Id</td>
+                            <td>@blog.Title</td>
+                            <td>@blog.Content</td>
+                            <td>@blog.UserId</td>
+                            <td>@string.Join(",", blog.Tags)</td>
+                            <td>@blog.CreatedDate.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        }
+
+    </div>
+</div>
+

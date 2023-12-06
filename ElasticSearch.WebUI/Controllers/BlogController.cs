@@ -1,4 +1,5 @@
-﻿using ElasticSearch.WebUI.Services;
+﻿using ElasticSearch.WebUI.Models;
+using ElasticSearch.WebUI.Services;
 using ElasticSearch.WebUI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,18 @@ namespace ElasticSearch.WebUI.Controllers
         public BlogController(BlogService blogService)
         {
             _blogService = blogService;
+        }
+
+        public async Task<IActionResult> Search()
+        {
+            return View(await _blogService.SearchAsync(string.Empty));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string searchText)
+        {
+            ViewBag.SearchText = searchText;
+            return View(await _blogService.SearchAsync(searchText));
         }
 
         public IActionResult Save()
@@ -33,5 +46,6 @@ namespace ElasticSearch.WebUI.Controllers
             TempData["result"] = "Kayıt işlemi başarılı oldu.";
             return RedirectToAction(nameof(Save));
         }
+
     }
 }

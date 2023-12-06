@@ -30,5 +30,10 @@ namespace ElasticSearch.WebUI.Services
 
             return result != null;
         }
+
+        public async Task<List<Blog>> SearchAsync(string searchText)
+        {
+            return await _blogRepository.SearchAsync(searchText);
+        }
     }
 }
