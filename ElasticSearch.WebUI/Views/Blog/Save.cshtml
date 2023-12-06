@@ -16,15 +16,15 @@
         <form asp-action="Save" asp-controller="Blog">
             <div class="mb-3">
                 <label asp-for="Title" class="form-label">Blog Title</label>
-                <input asp-for="Title" type="text" class="form-control">
+                <input asp-for="Title" type="text" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label asp-for="Content" class="form-label">Blog Content</label>
-                <textarea asp-for="Content" class="form-control" rows="3"></textarea>
+                <textarea asp-for="Content" class="form-control" rows="3" required></textarea>
             </div>
             <div class="mb-3">
                 <label asp-for="Tags" class="form-label">Blog Tags</label>
-                <input asp-for="Tags" class="form-control">
+                <input asp-for="Tags" class="form-control" required>
             </div>
             <div class="mb-3">
                 <button class="btn btn-primary" type="submit">Save</button>
