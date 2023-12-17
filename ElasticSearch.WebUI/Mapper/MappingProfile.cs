@@ -9,6 +9,8 @@ namespace ElasticSearch.WebUI.Mapper
         public MappingProfile()
         {
             CreateMap<BlogCreateViewModel, Blog>().ReverseMap();
+            CreateMap<ECommerceViewModel, ECommerce>().ReverseMap();
+            CreateMap<List<ECommerceViewModel>, List<ECommerce>>().ReverseMap();
         }
     }
 }
