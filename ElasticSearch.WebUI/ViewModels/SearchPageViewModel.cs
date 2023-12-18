@@ -10,6 +10,16 @@
         public List<ECommerceViewModel> List { get; set; }
         public ECommerceSearchFormViewModel SearchViewModel { get; set; }
 
+        public int StartPage()
+        {
+            return Page - 6 <= 0 ? 1 : Page - 6;
+        }
+
+        public long EndPage()
+        {
+            return Page + 6 > PageLinkCount ? PageLinkCount : Page + 6;
+        }
+
         public string CreatePageUrl(HttpRequest request, int page, int pageSize)
         {
             var currentUrl = new Uri($"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}").AbsoluteUri;

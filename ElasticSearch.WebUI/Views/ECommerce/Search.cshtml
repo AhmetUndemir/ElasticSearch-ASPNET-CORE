@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <form asp-action="Search" method="get">
                 <div class="mb-3">
                     <label asp-for="SearchViewModel.CustomerFullName" class="form-label"></label>
@@ -28,7 +28,7 @@
                     <input asp-for="SearchViewModel.OrderDateEnd" class="form-control">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-9">
                     <button class="btn btn-primary" type="submit">Ara</button>
                 </div>
             </form>
@@ -66,6 +66,24 @@
 
             </table>
 
+            <nav>
+                <ul class="pagination">
+
+                    <li class="page-item">
+                        <a class="page-link" href="@Model.CreatePageUrl(Context.Request,1,Model.PageSize)">First</a>
+                    </li>
+                    @for (int i = Model.StartPage(); i <= Model.EndPage(); i++)
+                    {
+                        <li class="page-item @(Model.Page == i ? "active" : "")">
+                            <a class="page-link" href="@Model.CreatePageUrl(Context.Request,i,Model.PageSize)">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item">
+                        <a class="page-link" href="@Model.CreatePageUrl(Context.Request,(int)Model.PageLinkCount,Model.PageSize)">Last</a>
+                    </li>
+                </ul>
+            </nav>
 
         </div>
     </div>
