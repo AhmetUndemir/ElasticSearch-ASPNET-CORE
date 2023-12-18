@@ -19,6 +19,13 @@ public class ECommerceRepository
     {
         List<Action<QueryDescriptor<ECommerce>>> listQuery = new List<Action<QueryDescriptor<ECommerce>>>();
 
+        if (searchViewModel is null)
+        {
+            listQuery.Add((q) => q.MatchAll());
+
+            return await CalculateResultSet(page, pageSize, listQuery);
+        }
+
         if (!string.IsNullOrEmpty(searchViewModel.Category))
         {
             listQuery.Add((q) => q
@@ -55,20 +62,32 @@ public class ECommerceRepository
 
         if (!string.IsNullOrEmpty(searchViewModel.Gender))
         {
-            listQuery.Add((q) => q.Term(t => t.Field(f => f.Gender).Value(searchViewModel.Gender)));
+            listQuery.Add((q) => q.Term(t => t.Field(f => f.Gender).Value(searchViewModel.Gender).CaseInsensitive()));
         }
 
+        if (!listQuery.Any())
+        {
+            listQuery.Add((q) => q.MatchAll());
+        }
+
+        return await CalculateResultSet(page, pageSize, listQuery);
+    }
+
+    public async Task<(List<ECommerce>, long count)> CalculateResultSet(int page, int pageSize, List<Action<QueryDescriptor<ECommerce>>> listQuery)
+    {
         var pageFrom = (page - 1) * pageSize;
+
         var result = await _client.SearchAsync<ECommerce>(s => s
-                              .Index(indexName)
-                              .Size(pageSize)
-                              .From(pageFrom)
-                              .Query(q => q
-                              .Bool(b => b
-                              .Must(listQuery.ToArray()))));
+                      .Index(indexName)
+                      .Size(pageSize)
+                      .From(pageFrom)
+                      .Query(q => q
+                      .Bool(b => b
+                      .Must(listQuery.ToArray()))));
 
         foreach (var hit in result.Hits) hit.Source.Id = hit.Id;
 
         return (result.Documents.ToList(), result.Total);
+
     }
 }

@@ -13,6 +13,9 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<BlogRepository>();
 builder.Services.AddScoped<BlogService>();
 
+builder.Services.AddScoped<ECommerceRepository>();
+builder.Services.AddScoped<ECommerceService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
